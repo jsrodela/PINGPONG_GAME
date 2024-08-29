@@ -1,13 +1,17 @@
 import pygame
 import sys
+import random
 
 # 초기화
 pygame.init()
 
 # 화면 크기 설정
-WIDTH, HEIGHT = 800, 1000
+WIDTH, HEIGHT = 800, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Ping Pong Game')
+
+#이미지 로드
+background_image = pygame.image.load('background.png')
 
 # 색상 정의
 WHITE = (255, 255, 255)
@@ -16,7 +20,7 @@ RED = (255, 0, 0)
 SKYBLUE = (0, 255, 255)
 
 # 패들 및 공 속성
-PADDLE_WIDTH, PADDLE_HEIGHT = 100, 15
+PADDLE_WIDTH, PADDLE_HEIGHT = 120, 15
 BALL_SIZE = 20
 INITIAL_LIVES = 3
 
@@ -32,6 +36,8 @@ ball_speed_x, ball_speed_y = 8, 8
 lives = INITIAL_LIVES
 score = 0
 font = pygame.font.Font(None, 36)
+# X좌표 속도 랜덤 셔플
+speed = [-5,-6,-7,-8,-9,5,6,7,8,9]
 
 def draw_score_lives():
     score_text = font.render(f'Score: {score}', True, WHITE)
@@ -58,11 +64,13 @@ clock = pygame.time.Clock()
 game_over = False
 
 while True:
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
+    
+    
     if not game_over:
         # 패들 조작
         keys = pygame.key.get_pressed()
@@ -92,13 +100,16 @@ while True:
 
         # 공과 패들 충돌
         if ball.colliderect(paddle):
-            ball_speed_y = -ball_speed_y
+            ball_speed_y = -random.randrange(5,10)
+            ball_speed_x = 19 + ball_speed_y
+
 
         # 화면 그리기
-        screen.fill(BLACK)
+        screen.fill(color=(0,0,0))
         pygame.draw.rect(screen, WHITE, paddle)
         pygame.draw.ellipse(screen, SKYBLUE, ball)
         draw_score_lives()
+        
 
     else:
         draw_game_over()
